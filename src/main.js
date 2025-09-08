@@ -58,7 +58,7 @@ function getRandomImage(){
 
 function loadImageTexture(imageNumber) {
     return new Promise((resolve) => {
-        const texture=textureLoader.load(`/assets/image${imageNumber}.png`, 
+        const texture=textureLoader.load(`/image${imageNumber}.png`, 
             (loadedTexture) => {
                loadedTexture.generateMipmaps = true;
                loadedTexture.minFilter =THREE.LinearMipMapLinearFilter;
@@ -222,7 +222,7 @@ async function initializeBlocks() {
 const gltfLoader = new GLTFLoader();
 let tower = null;
 let towerRotation = 0;
-gltfLoader.load('/assets/tower.glb', (gltf) => {
+gltfLoader.load('/tower.glb', (gltf) => {
     tower = gltf.scene;
     tower.position.set(0, -27, 0); // Center of the cylinder
     tower.scale.set(1, 2, 1); // Increase height (Y axis)
