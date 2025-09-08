@@ -15,8 +15,25 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x000000, 0); 
 document.body.appendChild(renderer.domElement);
-camera.position.z = 12;
-camera.position.y = 0;
+
+// Camera animation variables
+const cameraStates = {
+    initial: { 
+        x: -70, y: 300, z: 75,
+        rotationX: -0.3, rotationY: 0.4, rotationZ: -0.1  // Initial tilt
+    },
+    final: { 
+        x: 0, y: 15, z: 12,
+        rotationX: 0, rotationY: 0, rotationZ: 0  // Final straight orientation
+    }       // Final: slightly above center to avoid tower
+};
+
+let animationProgress = 0;
+let isIntroComplete = false;
+
+// Set initial camera position and orientation
+camera.position.set(cameraStates.initial.x, cameraStates.initial.y, cameraStates.initial.z);
+// Don't use lookAt - let camera maintain forward direction
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 scene.add(ambientLight);
@@ -103,6 +120,10 @@ const blockGeometries = [];
 const blockBendAmounts = [];
 const blockTargetBends = []; // Add missing array
 const originalVertices = [];
+// Store block meshes for hover effect
+const blockMeshes = [];
+const blockHoverStates = []; // Transition progress 0-1
+const blockHoverProgress = []; // Left-to-right progress 0-1
 const totalBlockHeight=numVerticalSections * verticalSpacing;
 const heightBuffer =0;
 const startY=-height/2+heightBuffer+verticalSpacing-10;
@@ -110,15 +131,57 @@ const sectionAngle=(Math.PI*2)/blockPerSection;
 const maxRandomAngle=sectionAngle*0.3;
 let finalAngle=0;
 async function createBlocks(BaseY,yOffset,sectionIndex,blockIndex){
-    const blockGeometry=createCurvedPlane(5,3,radius,10);
+    const blockGeometry=createCurvedPlane(6,3.5,radius,10);
     const imageNumber = getRandomImage();
     const texture = await loadImageTexture(imageNumber);
-    const blockMaterial = new THREE.MeshStandardMaterial({ map: texture
-        , side: THREE.DoubleSide
-        
-
-
-     });
+    // Custom shader material for left-to-right color transition
+    const blockMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            map: { value: texture },
+            colorProgress: { value: 0.0 },
+            transitionProgress: { value: 0.0 }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D map;
+            uniform float colorProgress;
+            uniform float transitionProgress;
+            varying vec2 vUv;
+            
+            void main() {
+                vec4 textureColor = texture2D(map, vUv);
+                
+                // Create grayscale version
+                float gray = dot(textureColor.rgb, vec3(0.299, 0.587, 0.114));
+                vec3 grayColor = vec3(gray * 0.6);
+                
+                // Enhanced color version
+                vec3 enhancedColor = textureColor.rgb;
+                
+                // Left-to-right reveal: show color where x position is less than transition progress
+                float revealThreshold = transitionProgress * 1.1; // Slightly extend for complete reveal
+                float softness = 0.25; // Much larger softness for smoother gradient
+                
+                // Use smoothstep to create smooth transition from left to right
+                float reveal = smoothstep(revealThreshold - softness, revealThreshold + softness, vUv.x);
+                
+                // Invert reveal so left side (low x) shows color first
+                reveal = 1.0 - reveal;
+                
+                // Mix colors: start grayscale, reveal color from left to right
+                vec3 finalColor = mix(grayColor, enhancedColor, reveal * colorProgress);
+                
+                gl_FragColor = vec4(finalColor, textureColor.a);
+            }
+        `,
+        side: THREE.DoubleSide
+    });
     const block = new THREE.Mesh(blockGeometry, blockMaterial);
 
     block.position.y += BaseY ;
@@ -126,7 +189,7 @@ async function createBlocks(BaseY,yOffset,sectionIndex,blockIndex){
     const baseAngle = sectionAngle * blockIndex;
     const randomAngleOffset = maxRandomAngle;
     // const randomAngleOffset = (Math.random() * 2 - 1) * maxRandomAngle;
-    finalAngle = finalAngle + 2 * Math.PI / 5;
+    finalAngle = finalAngle - 2 * Math.PI / 5; // Reverse spiral direction
     blockContainer.rotation.y = finalAngle;
     blockContainer.add(block);
     
@@ -136,6 +199,11 @@ async function createBlocks(BaseY,yOffset,sectionIndex,blockIndex){
     blockTargetBends.push(0); // Initialize target bend
     const positions = blockGeometry.attributes.position.array.slice(); // Copy original positions
     originalVertices.push(positions);
+    
+    // Store mesh for hover effect
+    blockMeshes.push(block);
+    blockHoverStates.push(0); // 0 = grayscale, 1 = color
+    blockHoverProgress.push(0); // 0 = no progress, 1 = complete
     
    return blockContainer
 }
@@ -177,6 +245,16 @@ let currentScroll = 0;
 let rotationSpeed = 0;
 const baseRotationSpeed = 0;
 
+// Raycaster and mouse for hover detection
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let isInitialized = false; // Prevent initial hover detection
+
+window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
 lenis.on('scroll', (e) => {
     currentScroll = e.scroll;
     rotationSpeed = e.velocity * 0.0033;
@@ -192,12 +270,31 @@ function raf(time) {
     requestAnimationFrame(raf);
 }
 function animate() {
-    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollFraction = scrollHeight > 0 ? currentScroll / scrollHeight : 0;
-    const targetY = scrollFraction * height - height / 2;
-    camera.position.y += (-targetY - camera.position.y) * 0.1;
+    // Camera intro animation - single smooth movement
+    if (!isIntroComplete) {
+        animationProgress += 0.003; // Much slower, more cinematic animation
+        const t = Math.min(animationProgress, 1.0);
+        const easeT = 1 - Math.pow(1 - t, 3); // Ease out cubic for smooth landing
+        
+        // Smoothly interpolate from initial position to final position
+        camera.position.x = THREE.MathUtils.lerp(cameraStates.initial.x, cameraStates.final.x, easeT);
+        camera.position.y = THREE.MathUtils.lerp(cameraStates.initial.y, cameraStates.final.y, easeT);
+        camera.position.z = THREE.MathUtils.lerp(cameraStates.initial.z, cameraStates.final.z, easeT);
+        
+        // Don't change camera rotation - let it maintain its natural forward orientation
+        
+        if (t >= 1.0) {
+            isIntroComplete = true;
+        }
+    } else {
+        // Normal scrolling behavior after intro
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollFraction = scrollHeight > 0 ? currentScroll / scrollHeight : 0;
+        const targetY = scrollFraction * height - height / 2;
+        camera.position.y += (-targetY - camera.position.y) * 0.1;
+    }
 
-    galleryGroup.rotation.y += baseRotationSpeed + rotationSpeed;
+    galleryGroup.rotation.y -= baseRotationSpeed + rotationSpeed;
     rotationSpeed *= 0.95;
     
     // Smooth bending effect for upper half of each image
@@ -233,9 +330,9 @@ function animate() {
                 const easedHeight = normalizedHeight * normalizedHeight * (3 - 2 * normalizedHeight);
                 const bendFactor = bendAmount * easedHeight;
                 
-                // Smooth Z-axis rotation
-                const cosVal = Math.cos(bendFactor);
-                const sinVal = Math.sin(bendFactor);
+                // Smooth Z-axis rotation (reversed direction)
+                const cosVal = Math.cos(-bendFactor); // Negative to reverse direction
+                const sinVal = Math.sin(-bendFactor); // Negative to reverse direction
                 positions.setX(i, x * cosVal - z * sinVal);
                 positions.setZ(i, x * sinVal + z * cosVal);
                 positions.setY(i, vertexY);
@@ -249,8 +346,50 @@ function animate() {
         geometry.computeVertexNormals();
     }
     
+    // Enhanced hover effect with left-to-right transition
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(blockMeshes);
+    let hoveredIndex = -1;
+    
+    // Only detect hover after initialization AND intro animation is complete
+    if (isInitialized && isIntroComplete && intersects.length > 0) {
+        hoveredIndex = blockMeshes.indexOf(intersects[0].object);
+    }
+    
+    // Smooth color transitions with left-to-right reveal
+    for (let i = 0; i < blockHoverStates.length; i++) {
+        // Force all to start at 0 if not initialized
+        if (!isInitialized) {
+            blockHoverStates[i] = 0.0;
+            blockHoverProgress[i] = 0.0;
+        } else if (i === hoveredIndex) {
+            // While hovering: fade in color quickly
+            blockHoverStates[i] += 0.07; // Faster color fade-in when hovering
+            if (blockHoverStates[i] > 1.0) blockHoverStates[i] = 1.0;
+            
+            // Left-to-right sweep - faster when hovering
+            blockHoverProgress[i] += 0.015; // Faster sweep when hovering
+            if (blockHoverProgress[i] > 1.0) blockHoverProgress[i] = 1.0;
+        } else {
+            // Not hovering: fade out smoothly and slower
+            blockHoverStates[i] -= 0.025; // Slower fade-out when not hovering
+            if (blockHoverStates[i] < 0.0) blockHoverStates[i] = 0.0;
+            
+            // Reset transition when not hovering - slower
+            blockHoverProgress[i] -= 0.035; // Slower reset when not hovering
+            if (blockHoverProgress[i] < 0.0) blockHoverProgress[i] = 0.0;
+        }
+        
+        // Update shader uniforms
+        const material = blockMeshes[i].material;
+        if (material.uniforms) {
+            material.uniforms.colorProgress.value = blockHoverStates[i];
+            material.uniforms.transitionProgress.value = blockHoverProgress[i];
+        }
+    }
+    
     if (tower) {
-        towerRotation += (baseRotationSpeed + rotationSpeed)*0.3;
+        towerRotation -= (baseRotationSpeed + rotationSpeed)*0.3; // Reverse tower rotation
         tower.rotation.y = towerRotation;
     }
     renderer.render(scene, camera);
@@ -258,6 +397,21 @@ function animate() {
 
 async function start() {
     await initializeBlocks();
+    
+    // Force all images to start in grayscale by resetting all uniforms
+    for (let i = 0; i < blockMeshes.length; i++) {
+        const material = blockMeshes[i].material;
+        if (material.uniforms) {
+            material.uniforms.colorProgress.value = 0.0;
+            material.uniforms.transitionProgress.value = 0.0;
+        }
+    }
+    
+    // Set initialization flag after a short delay to ensure all starts in B&W
+    setTimeout(() => {
+        isInitialized = true;
+    }, 500);
+    
     requestAnimationFrame(raf);
 }
 start();
