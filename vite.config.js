@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: './', // Use relative paths for assets
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -14,5 +15,8 @@ export default defineConfig({
       }
     }
   },
-  publicDir: 'public'
+  publicDir: 'public',
+  server: {
+    host: true
+  }
 })
