@@ -1,0 +1,263 @@
+/* 2D1 Kinetic Scroller Styles */
+
+body.two-d1-active {
+  min-height: 500vh;
+  width: 100vw;
+  background-color: #fbfbfb;
+  color: #222;
+  overflow-x: hidden;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.kinetic-stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.center-totem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 380px;
+  height: 380px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.12;
+  z-index: 0;
+}
+
+.totem-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1.5px dashed #000;
+  transform: translate(-50%, -50%);
+}
+
+.ring-1 {
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.ring-2 {
+  width: 70%;
+  height: 70%;
+  animation: totem-spin-rev 20s linear infinite;
+}
+
+.ring-3 {
+  width: 40%;
+  height: 40%;
+  border-style: dotted;
+  border-width: 2px;
+  animation: totem-spin 12s linear infinite;
+}
+
+.totem-spine {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  width: 1px;
+  height: 140%;
+  background: linear-gradient(to bottom, transparent, #000, transparent);
+  transform: translateX(-50%);
+}
+
+@keyframes totem-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes totem-spin-rev {
+  from { transform: translate(-50%, -50%) rotate(360deg); }
+  to { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+.kinetic-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+}
+
+.kinetic-card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 330px;
+  height: 210px;
+  margin-left: -165px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.kinetic-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #181818;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+  transform-style: preserve-3d;
+  transition: box-shadow 0.25s ease;
+}
+
+.kinetic-card:hover .kinetic-card-inner {
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.28);
+}
+
+.slice {
+  position: relative;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.slice-top {
+  transform-origin: bottom center;
+}
+
+.slice-bottom {
+  transform-origin: top center;
+}
+
+.slice .k-img-base {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.65);
+}
+
+.slice-top .k-img-base {
+  top: 0;
+}
+
+.slice-bottom .k-img-base {
+  top: -105px;
+}
+
+.k-img-reveal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  overflow: hidden;
+}
+
+.k-img-color {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+}
+
+.slice-top .k-img-color {
+  top: 0;
+}
+
+.slice-bottom .k-img-color {
+  top: -105px;
+}
+
+.kinetic-card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.two-d1-root .content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1rem;
+  pointer-events: none;
+}
+
+.two-d1-root .section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 2.2rem;
+  color: #222;
+  pointer-events: auto;
+}
+
+.two-d1-root .section h2 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  max-width: 90vw;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .center-totem {
+    width: 240px;
+    height: 240px;
+  }
+  .kinetic-card {
+    width: 240px;
+    height: 155px;
+    margin-left: -120px;
+  }
+  .slice .k-img-base,
+  .k-img-color {
+    height: 155px;
+  }
+  .slice-bottom .k-img-base,
+  .slice-bottom .k-img-color {
+    top: -77px;
+  }
+  .two-d1-root .section {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .kinetic-card {
+    width: 190px;
+    height: 125px;
+    margin-left: -95px;
+  }
+  .slice .k-img-base,
+  .k-img-color {
+    height: 125px;
+  }
+  .slice-bottom .k-img-base,
+  .slice-bottom .k-img-color {
+    top: -62px;
+  }
+  .two-d1-root .section {
+    font-size: 1.35rem;
+  }
+}
