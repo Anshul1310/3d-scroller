@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         twoD: resolve(__dirname, '2d/index.html'),
+        twoD0: resolve(__dirname, '2d0/index.html'),
         twoD1: resolve(__dirname, '2d1/index.html'),
         twoD2: resolve(__dirname, '2d2/index.html'),
         twoD3: resolve(__dirname, '2d3/index.html'),

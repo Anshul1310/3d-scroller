@@ -17,7 +17,7 @@ body:not([class*="two-d"]) {
 }
 
 /* ==========================================================================
-   GLOBAL TOP NAVIGATION TABS (RESPONSIVE & CLEAN)
+   GLOBAL TOP NAVIGATION TABS (TRANSLUCENT WHITE FROSTED THEME)
    ========================================================================== */
 .app-global-nav {
   position: fixed;
@@ -29,11 +29,11 @@ body:not([class*="two-d"]) {
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  background: rgba(12, 13, 18, 0.72);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
 }
 
@@ -48,7 +48,7 @@ body:not([class*="two-d"]) {
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #ffffff;
+  color: #111111;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -57,29 +57,29 @@ body:not([class*="two-d"]) {
   display: flex;
   align-items: center;
   overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   max-width: calc(100vw - 220px);
   padding: 2px;
 }
 
 .nav-tabs-scroll::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .nav-tabs-pills {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.04);
   padding: 0.3rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   white-space: nowrap;
 }
 
 .nav-tab {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.65);
   text-decoration: none;
   font-size: 0.78rem;
   font-weight: 600;
@@ -93,15 +93,15 @@ body:not([class*="two-d"]) {
 }
 
 .nav-tab:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .nav-tab.active {
-  background: #ffffff;
-  color: #0c0d12;
+  background: #111111;
+  color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* 3D Scroller Content */

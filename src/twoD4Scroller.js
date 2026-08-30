@@ -37,18 +37,6 @@ export class TwoD4Scroller {
     root.id = 'two-d4-root';
     root.className = 'two-d4-root';
     root.innerHTML = `
-      <div class="nav">
-        <h1>2D4 GALLERY FRAMES</h1>
-        <div class="nav-routes" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <a href="/2d" class="mode-switch-btn nav-route-link" data-route="/2d">2D SPIRAL</a>
-          <a href="/2d1" class="mode-switch-btn nav-route-link" data-route="/2d1">2D1 KINETIC</a>
-          <a href="/2d2" class="mode-switch-btn nav-route-link" data-route="/2d2">2D2 DECK</a>
-          <a href="/2d3" class="mode-switch-btn nav-route-link" data-route="/2d3">2D3 VORTEX</a>
-          <a href="/2d5" class="mode-switch-btn nav-route-link" data-route="/2d5">2D5 BOOK</a>
-          <a href="/" class="mode-switch-btn nav-route-link" data-route="/">3D MODE</a>
-        </div>
-      </div>
-
       <!-- Photo Frames Salon Stage -->
       <div class="gallery-wall-stage" id="galleryWallStage">
         <div class="frames-track" id="framesTrack">

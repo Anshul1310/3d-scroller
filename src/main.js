@@ -11,10 +11,11 @@ class AppRouter {
     this.currentInstance = null;
     this.currentRoute = null;
     this.container = null;
+    this.navElement = null;
   }
 
   init() {
-    this.container = document.getElementById('app') || document.body;
+    this.setupGlobalDOM();
     this.handleRoute();
     window.addEventListener('popstate', () => this.handleRoute());
 
@@ -38,32 +39,74 @@ class AppRouter {
     });
   }
 
+  setupGlobalDOM() {
+    // Top Navigation
+    let nav = document.getElementById('globalNav');
+    if (!nav) {
+      nav = document.createElement('header');
+      nav.id = 'globalNav';
+      nav.className = 'app-global-nav';
+      document.body.prepend(nav);
+    }
+    this.navElement = nav;
+
+    // Content App Root
+    let app = document.getElementById('app');
+    if (!app) {
+      app = document.createElement('div');
+      app.id = 'app';
+      document.body.appendChild(app);
+    }
+    this.container = app;
+  }
+
+  renderGlobalNav(activeRoute) {
+    if (!this.navElement) return;
+
+    const routes = [
+      { path: '/', label: '3D' },
+      { path: '/2d0', altPath: '/2d', label: '2D0 Spiral' },
+      { path: '/2d1', label: '2D1 Kinetic' },
+      { path: '/2d2', label: '2D2 Deck' },
+      { path: '/2d3', label: '2D3 Vortex' },
+      { path: '/2d4', label: '2D4 Frames' },
+      { path: '/2d5', label: '2D5 Book' }
+    ];
+
+    const currentKey = (activeRoute === '/2d' || activeRoute === '/2d0') ? '/2d0' : activeRoute;
+
+    const tabsHtml = routes.map((r) => {
+      const isActive = r.path === currentKey || (r.altPath && r.altPath === activeRoute);
+      return `<a href="${r.path}" class="nav-tab ${isActive ? 'active' : ''} nav-route-link" data-route="${r.path}">${r.label}</a>`;
+    }).join('');
+
+    this.navElement.innerHTML = `
+      <div class="nav-brand-wrap">
+        <a href="/" class="global-brand nav-route-link" data-route="/">TRANSFINITTE</a>
+      </div>
+      <nav class="nav-tabs-scroll">
+        <div class="nav-tabs-pills">
+          ${tabsHtml}
+        </div>
+      </nav>
+    `;
+  }
+
   getRoute() {
     const path = window.location.pathname.toLowerCase();
-    if (path.startsWith('/2d5')) {
-      return '/2d5';
-    }
-    if (path.startsWith('/2d4')) {
-      return '/2d4';
-    }
-    if (path.startsWith('/2d3')) {
-      return '/2d3';
-    }
-    if (path.startsWith('/2d2')) {
-      return '/2d2';
-    }
-    if (path.startsWith('/2d1')) {
-      return '/2d1';
-    }
-    if (path.startsWith('/2d')) {
-      return '/2d';
-    }
+    if (path.startsWith('/2d5')) return '/2d5';
+    if (path.startsWith('/2d4')) return '/2d4';
+    if (path.startsWith('/2d3')) return '/2d3';
+    if (path.startsWith('/2d2')) return '/2d2';
+    if (path.startsWith('/2d1')) return '/2d1';
+    if (path.startsWith('/2d0') || path.startsWith('/2d')) return '/2d0';
     return '/';
   }
 
   async handleRoute() {
     const route = this.getRoute();
     if (route === this.currentRoute && this.currentInstance) {
+      this.renderGlobalNav(route);
       return;
     }
 
@@ -82,6 +125,7 @@ class AppRouter {
     this.currentRoute = route;
 
     document.body.classList.remove('two-d-active', 'two-d1-active', 'two-d2-active', 'two-d3-active', 'two-d4-active', 'two-d5-active');
+    this.renderGlobalNav(route);
 
     if (route === '/2d5') {
       document.body.classList.add('two-d5-active');
@@ -113,9 +157,9 @@ class AppRouter {
       const { TwoD1Scroller } = await import('./twoD1Scroller.js');
       this.currentInstance = new TwoD1Scroller(this.container);
       this.currentInstance.mount();
-    } else if (route === '/2d') {
+    } else if (route === '/2d0' || route === '/2d') {
       document.body.classList.add('two-d-active');
-      document.title = "2D Scroller — Transfinitte";
+      document.title = "2D0 Spiral Scroller — Transfinitte";
       const { TwoDScroller } = await import('./twoDScroller.js');
       this.currentInstance = new TwoDScroller(this.container);
       this.currentInstance.mount();

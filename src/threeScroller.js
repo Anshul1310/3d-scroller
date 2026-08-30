@@ -100,23 +100,6 @@ export class ThreeScroller {
         </section>
       </main>
     `;
-        <section class="section">
-          <h2>4 domains</h2>
-        </section>
-        <section class="section">
-          <h2>42 hours</h2>
-        </section>
-        <section class="section">
-          <h2>100+ team</h2>
-        </section>
-        <section class="section">
-          <h2>infinite possibilities</h2>
-        </section>
-        <section class="section">
-          <h2>TRANSFINITTE</h2>
-        </section>
-      </main>
-    `;
     this.container.appendChild(root);
   }
 

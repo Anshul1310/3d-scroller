@@ -38,18 +38,6 @@ export class TwoD3Scroller {
     root.id = 'two-d3-root';
     root.className = 'two-d3-root';
     root.innerHTML = `
-      <div class="nav">
-        <h1>2D3 RADIAL VORTEX</h1>
-        <div class="nav-routes" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <a href="/2d" class="mode-switch-btn nav-route-link" data-route="/2d">2D SPIRAL</a>
-          <a href="/2d1" class="mode-switch-btn nav-route-link" data-route="/2d1">2D1 KINETIC</a>
-          <a href="/2d2" class="mode-switch-btn nav-route-link" data-route="/2d2">2D2 DECK</a>
-          <a href="/2d4" class="mode-switch-btn nav-route-link" data-route="/2d4">2D4 FRAMES</a>
-          <a href="/2d5" class="mode-switch-btn nav-route-link" data-route="/2d5">2D5 BOOK</a>
-          <a href="/" class="mode-switch-btn nav-route-link" data-route="/">3D MODE</a>
-        </div>
-      </div>
-
       <!-- Radial Kinetic Vortex Stage -->
       <div class="vortex-stage" id="vortexStage">
         <div class="vortex-core" id="vortexCore">

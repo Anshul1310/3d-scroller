@@ -31,19 +31,7 @@ export class TwoDScroller {
     root.id = 'two-d-root';
     root.className = 'two-d-root';
     root.innerHTML = `
-      <div class="nav">
-        <h1>2D SCROLLER</h1>
-        <div class="nav-routes" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <a href="/2d1" class="mode-switch-btn nav-route-link" data-route="/2d1">2D1 KINETIC</a>
-          <a href="/2d2" class="mode-switch-btn nav-route-link" data-route="/2d2">2D2 DECK</a>
-          <a href="/2d3" class="mode-switch-btn nav-route-link" data-route="/2d3">2D3 VORTEX</a>
-          <a href="/2d4" class="mode-switch-btn nav-route-link" data-route="/2d4">2D4 FRAMES</a>
-          <a href="/2d5" class="mode-switch-btn nav-route-link" data-route="/2d5">2D5 BOOK</a>
-          <a href="/" class="mode-switch-btn nav-route-link" data-route="/">3D MODE</a>
-        </div>
-      </div>
-
-      <!-- 2D Image Gallery Stage (Fixed / Layered beneath or alongside text, matching 3D) -->
+      <!-- 2D Image Gallery Stage -->
       <div class="gallery-2d-stage" id="gallery2dStage">
         <!-- Image blocks will be injected here -->
       </div>

@@ -1,16 +1,4 @@
 import{L as m}from"./lenis-BRqnZd4Q.js";class f{constructor(e){this.container=e||document.body,this.lenis=null,this.rafId=null,this.currentScroll=0,this.scrollVelocity=0,this.targetVelocity=0,this.isDestroyed=!1,this.pages=[],this.chapters=[{id:1,title:"4 domains",img:"/image1.png"},{id:2,title:"42 hours",img:"/image2.png"},{id:3,title:"100+ team",img:"/image3.png"},{id:4,title:"infinite possibilities",img:"/image1.png"},{id:5,title:"TRANSFINITTE",img:"/image2.png"}],this.mouse={x:0,y:0,targetX:0,targetY:0},this.onMouseMove=s=>{this.mouse.targetX=(s.clientX/window.innerWidth-.5)*2,this.mouse.targetY=(s.clientY/window.innerHeight-.5)*2}}mount(){this.renderDOM(),this.initLenis(),this.initBookPages(),window.addEventListener("mousemove",this.onMouseMove),this.startLoop()}renderDOM(){const e=document.getElementById("two-d5-root");e&&e.remove();const s=document.createElement("div");s.id="two-d5-root",s.className="two-d5-root",s.innerHTML=`
-      <div class="nav">
-        <h1>2D5 BOOK FOLIO</h1>
-        <div class="nav-routes">
-          <a href="/2d" class="mode-switch-btn nav-route-link" data-route="/2d">2D SPIRAL</a>
-          <a href="/2d1" class="mode-switch-btn nav-route-link" data-route="/2d1">2D1 KINETIC</a>
-          <a href="/2d2" class="mode-switch-btn nav-route-link" data-route="/2d2">2D2 DECK</a>
-          <a href="/2d3" class="mode-switch-btn nav-route-link" data-route="/2d3">2D3 VORTEX</a>
-          <a href="/2d4" class="mode-switch-btn nav-route-link" data-route="/2d4">2D4 FRAMES</a>
-          <a href="/" class="mode-switch-btn nav-route-link" data-route="/">3D MODE</a>
-        </div>
-      </div>
-
       <!-- Book Stage -->
       <div class="book-stage" id="bookStage">
         <div class="book-wrapper" id="bookWrapper">

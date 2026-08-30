@@ -37,18 +37,6 @@ export class TwoD2Scroller {
     root.id = 'two-d2-root';
     root.className = 'two-d2-root';
     root.innerHTML = `
-      <div class="nav">
-        <h1>2D2 HORIZONTAL DECK</h1>
-        <div class="nav-routes" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <a href="/2d" class="mode-switch-btn nav-route-link" data-route="/2d">2D SPIRAL</a>
-          <a href="/2d1" class="mode-switch-btn nav-route-link" data-route="/2d1">2D1 KINETIC</a>
-          <a href="/2d3" class="mode-switch-btn nav-route-link" data-route="/2d3">2D3 VORTEX</a>
-          <a href="/2d4" class="mode-switch-btn nav-route-link" data-route="/2d4">2D4 FRAMES</a>
-          <a href="/2d5" class="mode-switch-btn nav-route-link" data-route="/2d5">2D5 BOOK</a>
-          <a href="/" class="mode-switch-btn nav-route-link" data-route="/">3D MODE</a>
-        </div>
-      </div>
-
       <!-- Horizontal 2.5D Coverflow Stage -->
       <div class="horizontal-stage" id="horizontalStage">
         <div class="deck-track" id="deckTrack">
