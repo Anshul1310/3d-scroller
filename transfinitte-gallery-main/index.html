@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Transfinitte '26 // Circular Photo Gallery</title>
+  
+  <!-- Google Fonts: Space Grotesk & Space Mono for Transfinitte Cyber Aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- Technical Background Grid & Vignette -->
+  <div class="bg-grid"></div>
+  <div class="bg-radial-vignette"></div>
+  <div class="bg-watermark">transfinitte</div>
+
+  <!-- Transfinitte Corner Crop Marks -->
+  <div class="corner-mark corner-tl"></div>
+  <div class="corner-mark corner-tr"></div>
+  <div class="corner-mark corner-bl"></div>
+  <div class="corner-mark corner-br"></div>
+
+  <!-- Header Navigation (Minimal Transfinitte Bar) -->
+  <header class="site-header">
+    <div class="header-left">
+      <span class="live-pulse"></span>
+      <span>49 DAYS TO GO</span>
+      <span style="opacity: 0.35;">|</span>
+      <span style="opacity: 0.75;">OCT 21-23 2026 • GJCH</span>
+    </div>
+
+    <div class="header-center">
+      <a href="#" class="logo-badge">
+        <span>TRANSFINITTE</span>
+        <span class="logo-badge-box">26</span>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <!-- Minimal Header -->
+    </div>
+  </header>
+
+  <!-- Main Viewport Container -->
+  <main class="app-container">
+
+    <!-- Interactive Canvas Layer for Revolving Annular Photo Arc -->
+    <div class="canvas-wrapper">
+      <canvas id="galleryCanvas"></canvas>
+      <div id="hoverTooltip" class="hover-tooltip">
+        <div class="tooltip-title">Photo Title</div>
+      </div>
+    </div>
+
+    <!-- Hero Content (Title, Description, and Group Only) -->
+    <section class="hero-content">
+      
+      <div class="hero-top">
+        <!-- Logo inside circular gap on mobile -->
+        <div class="mobile-circle-logo">
+          <a href="#" class="logo-badge">
+            <span>TRANSFINITTE</span>
+            <span class="logo-badge-box">26</span>
+          </a>
+        </div>
+
+        <div class="section-tag">
+          <span class="tag-dot"></span>
+          <span>LAUNCHPAD ARCHIVE // '25</span>
+        </div>
+
+        <h1 class="hero-title">
+          MOMENTS <br>
+          <span class="dim">IN MOTION</span>
+        </h1>
+
+        <p class="hero-desc">
+          A kinetic radial timeline celebrating the energy and triumphs of TransfiNITTe.
+        </p>
+
+        <!-- Mobile Interaction Hint Badge -->
+        <div class="mobile-swipe-badge">
+          <span class="swipe-badge-dot"></span>
+          <span>SWIPE TO EXPLORE ↗</span>
+        </div>
+
+        <!-- Transfinitte Authentic Real Chat Dialogue -->
+        <div class="real-chat-container">
+          <!-- Incoming message (Dark bubble with bottom-left speech tail) -->
+          <div class="chat-row chat-incoming">
+            <div class="chat-bubble-wrapper">
+              <div class="real-bubble bubble-dark-chat">
+                <span class="chat-sender-tag">HACKER_01</span>
+                <p class="chat-bold-title">TransfiNITTe '25 was insane,</p>
+                <p class="chat-sub-text">How to view the memories?</p>
+                <span class="chat-timestamp">02:14 AM</span>
+              </div>
+              <svg class="chat-tail-svg tail-left-svg" width="14" height="16" viewBox="0 0 14 16" fill="none">
+                <path d="M14 0C14 6 10 12 0 15C6 14 11 11 14 4V0Z" fill="#181822"/>
+                <path d="M14 0C14 6 10 12 0 15" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Outgoing message (White bubble with bottom-right speech tail) -->
+          <div class="chat-row chat-outgoing">
+            <div class="chat-bubble-wrapper">
+              <div class="real-bubble bubble-light-chat">
+                <span class="chat-sender-reply">TRANSFINITTE_CORE</span>
+                <p class="chat-hero-reply">Use the scrollable wheel to view memories ↗</p>
+                <div class="chat-status-bar">
+                  <span class="chat-time-light">02:15 AM</span>
+                  <span class="chat-read-ticks">✓✓</span>
+                </div>
+              </div>
+              <svg class="chat-tail-svg tail-right-svg" width="14" height="16" viewBox="0 0 14 16" fill="none">
+                <path d="M0 0C0 6 4 12 14 15C8 14 3 11 0 4V0Z" fill="#ffffff"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inspect Picture Card Form -->
+        <div class="inspect-picture-card">
+          <div class="card-header">
+            <span id="inspectTheme" class="inspect-theme-badge">THEME: KEYNOTE</span>
+            <span id="inspectIndex" class="inspect-index-tag">[ 01 / 12 ]</span>
+          </div>
+          <h3 id="inspectTitle" class="inspect-title">Opening Keynote & Inauguration</h3>
+          <p id="inspectDescription" class="inspect-description">The inauguration ceremony of TransfiNITTe '25 with 1200+ hackers from across 80+ universities gearing up for a 42-hour non-stop sprint.</p>
+          <div class="card-nav-row">
+            <button id="btnCardPrev" class="card-nav-arrow" title="Previous Picture">
+              <span>←</span>
+              <span>PREV</span>
+            </button>
+            <button id="btnInspectModal" class="btn-inspect-action">
+              <span>INSPECT</span>
+              <span>↗</span>
+            </button>
+            <button id="btnCardNext" class="card-nav-arrow" title="Next Picture">
+              <span>NEXT</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Site Footer (Centered Copyright Text Only) -->
+  <footer class="site-footer">
+    <div class="footer-center">
+      <span>© 2026 TRANSFINITTE. ALL RIGHTS RESERVED.</span>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Full View Inspection -->
+  <div id="lightboxOverlay" class="lightbox-overlay" role="dialog" aria-modal="true">
+    <div class="lightbox-card">
+      <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close modal">✕</button>
+
+      <!-- Image Pane -->
+      <div class="lightbox-image-pane">
+        <img id="modalImg" class="lightbox-img" src="" alt="Selected photo">
+      </div>
+
+      <!-- Details Pane -->
+      <div class="lightbox-details-pane">
+        <div>
+          <div class="modal-badge-row">
+            <span id="modalBadge" class="modal-badge">MOMENT</span>
+            <span id="modalPhotoId" class="modal-photo-id">INDEX [01]</span>
+          </div>
+
+          <h2 id="modalTitle" class="modal-title">Photo Title</h2>
+          <p id="modalDescription" class="modal-description">Detailed description of the moment captured during TransfiNITTe hackathon.</p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="modal-nav-row">
+          <button id="btnModalPrev" class="modal-nav-btn">
+            <span>← PREVIOUS</span>
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+            USE [←] [→] KEYS
+          </span>
+          <button id="btnModalNext" class="modal-nav-btn">
+            <span>NEXT →</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="./photos.js"></script>
+  <script src="./gallery.js"></script>
+</body>
+</html>

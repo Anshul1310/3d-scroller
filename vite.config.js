@@ -15,7 +15,8 @@ export default defineConfig({
         twoD2: resolve(__dirname, '2d2/index.html'),
         twoD3: resolve(__dirname, '2d3/index.html'),
         twoD4: resolve(__dirname, '2d4/index.html'),
-        twoD5: resolve(__dirname, '2d5/index.html')
+        twoD5: resolve(__dirname, '2d5/index.html'),
+        twoD6: resolve(__dirname, '2d6/index.html')
       }
     }
   },

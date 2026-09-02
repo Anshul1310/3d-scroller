@@ -1,293 +1,438 @@
-/* 2D5 Book Folio Pages Turning Scroller */
+/* 2D5 Arc Reel — Disney Launchpad Experience */
 
 body.two-d5-active {
   min-height: 500vh;
   width: 100vw;
-  background-color: #16171b;
-  color: #ffffff;
+  background-color: #f1efea;
+  color: #1a1a18;
   overflow-x: hidden;
   position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  user-select: none;
 }
 
-.book-stage {
+/* Base Fullscreen Container */
+.two-d5-root {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  perspective: 1800px;
-  perspective-origin: 50% 50%;
-  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 45%, #faf8f5 0%, #ebe7df 70%, #dfdbce 100%);
   z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
 }
 
-.book-wrapper {
-  position: relative;
-  width: 860px;
-  height: 540px;
-  max-width: 94vw;
-  max-height: 70vh;
-  transform-style: preserve-3d;
-  transform: rotateX(12deg);
-  box-shadow: 
-    0 40px 90px rgba(0, 0, 0, 0.8),
-    0 15px 30px rgba(0, 0, 0, 0.5);
-  border-radius: 8px;
-  pointer-events: auto;
-  transition: transform 0.15s ease-out;
-}
-
-.book-cover-back {
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  width: calc(100% + 20px);
-  height: calc(100% + 20px);
-  background: #252830;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
-  z-index: 0;
-}
-
-.book-spine {
+.poster-paper-bg {
   position: absolute;
   top: 0;
-  left: 50%;
-  width: 6px;
+  left: 0;
+  width: 100%;
   height: 100%;
-  background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(255,255,255,0.1), rgba(0,0,0,0.5));
-  transform: translateX(-50%);
-  z-index: 30;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.04) 100%);
   pointer-events: none;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
 }
 
-.book-base-spread {
+.poster-texture-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.18;
+  pointer-events: none;
+  background-image: radial-gradient(#000 0.8px, transparent 0.8px), radial-gradient(#000 0.8px, #f1efea 0.8px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+.poster-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.07);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 3D Perspective Poster Stage */
+.poster-stage {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  border-radius: 6px;
-  overflow: hidden;
-  z-index: 1;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  z-index: 4;
+  box-sizing: border-box;
+  padding: 4.8rem 3.5rem 3rem 5.5rem;
 }
 
-.page-side {
-  width: 50%;
+/* Left Column: Editorial Typography & Branding */
+.poster-left-panel {
+  width: 46%;
   height: 100%;
-  background: #f8f7f2;
-  color: #1a1a1a;
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: auto;
+  max-width: 520px;
 }
 
-.page-left-base {
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: inset -20px 0 30px rgba(0, 0, 0, 0.1);
+.editorial-top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
-.page-right-base {
-  box-shadow: inset 20px 0 30px rgba(0, 0, 0, 0.1);
+.editorial-heading-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.base-img {
+.poster-eyebrow-1 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #55534c;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.poster-eyebrow-2 {
+  font-size: 0.80rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #6e6c64;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Directors List */
+.directors-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.director-item {
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.director-btn {
+  background: none;
+  border: none;
+  padding: 0.15rem 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.director-bullet {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: all 0.25s ease;
+  transform: scale(0);
+}
+
+.director-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  color: #6b6961;
+  text-transform: uppercase;
+  transition: color 0.25s ease, letter-spacing 0.25s ease;
+}
+
+.director-item:hover .director-name {
+  color: #111110;
+}
+
+.director-item.active .director-bullet {
+  background-color: #111110;
+  transform: scale(1.5);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+}
+
+.director-item.active .director-name {
+  color: #0d0d0c;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  transform: translateX(4px);
+}
+
+/* Film Active Preview Box */
+.film-active-preview {
+  padding: 0.6rem 0;
+  min-height: 70px;
+}
+
+.preview-number {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #8c897f;
+  margin-bottom: 0.25rem;
+}
+
+.preview-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #111110;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.preview-tagline {
+  font-size: 0.82rem;
+  color: #636159;
+  font-style: italic;
+  line-height: 1.35;
+  transition: opacity 0.2s ease;
+}
+
+/* Editorial Bottom Hero Branding */
+.editorial-bottom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: auto;
+}
+
+/* Disney Script SVG */
+.disney-brand-wrap {
+  width: 95px;
+  height: 30px;
+  color: #111110;
+}
+
+.disney-brand-svg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  filter: grayscale(100%) brightness(0.65);
 }
 
-.book-leaves {
+/* LAUNCHPAD Title Lockup */
+.launchpad-brand-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.launchpad-word {
+  display: flex;
+  align-items: baseline;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+}
+
+.lp-letter {
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: #111110;
+  letter-spacing: -0.01em;
+}
+
+.lp-p-camera-box {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.camera-icon-svg {
+  position: absolute;
+  top: -26px;
+  left: 3px;
+  width: 48px;
+  height: 35px;
+  color: #111110;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.camera-light-beam {
+  animation: cameraGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes cameraGlow {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.65; }
+}
+
+.launchpad-tagline {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  color: #55534c;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+}
+
+/* Streaming Footer Banner */
+.streaming-footer-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+}
+
+.dplus-badge {
+  display: flex;
+  align-items: baseline;
+  font-weight: 900;
+  color: #111110;
+}
+
+.dplus-logo-main {
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.dplus-logo-plus {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-left: 1px;
+}
+
+.dplus-subtext {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #504e46;
+}
+
+/* Right Arc Canvas Stage */
+.poster-right-panel {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
-  height: 100%;
-  transform-style: preserve-3d;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   pointer-events: auto;
+  z-index: 5;
 }
 
-.book-leaf {
+.arc-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  will-change: transform;
-  cursor: pointer;
+  cursor: grab;
 }
 
-.leaf-face {
+.arc-canvas:active {
+  cursor: grabbing;
+}
+
+/* Scroll Hint */
+.reel-scroll-hint {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #f8f7f2;
-  color: #1a1a1a;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 0 6px 6px 0;
-  overflow: hidden;
-}
-
-.leaf-front {
-  box-shadow: 
-    inset 20px 0 35px rgba(0, 0, 0, 0.12),
-    -5px 0 15px rgba(0, 0, 0, 0.15);
-}
-
-.leaf-back {
-  transform: rotateY(180deg);
-  border-radius: 6px 0 0 6px;
-  box-shadow: 
-    inset -20px 0 35px rgba(0, 0, 0, 0.12),
-    5px 0 15px rgba(0, 0, 0, 0.15);
-}
-
-.page-photo-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  background: #0d0e12;
-}
-
-.p-img-base {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(100%) brightness(0.65);
-  border-radius: 4px;
-}
-
-.p-img-reveal {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: calc(100% - 40px);
-  height: calc(100% - 40px);
-  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  overflow: hidden;
-  border-radius: 4px;
-}
-
-.p-img-color {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.page-sheen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.25) 0%, transparent 25%, rgba(255, 255, 255, 0.15) 75%, rgba(0, 0, 0, 0.1) 100%);
-  pointer-events: none;
-}
-
-.page-content {
-  padding: 40px 30px;
+  bottom: 2.8rem;
+  right: 3.5rem;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
-  box-sizing: border-box;
-  background: #faf8f2;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
-.folio-tag {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
+.hint-arrow {
+  font-size: 0.9rem;
+  color: #111110;
+  animation: bounceDown 1.5s ease-in-out infinite;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+.hint-label {
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  color: #887a66;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #887a66;
-  padding-bottom: 0.2rem;
+  letter-spacing: 0.16em;
+  color: #383630;
 }
 
-.book-chapter-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  line-height: 1.1;
-  color: #1a1a1a;
-  letter-spacing: -0.02em;
-  text-transform: lowercase;
-  word-break: break-word;
-}
-
-.two-d5-root .content {
+/* Virtual Lenis Scroll Spine */
+.virtual-scroll-spine {
   position: relative;
-  z-index: 2;
-  padding: 2rem 1rem;
+  z-index: 0;
   pointer-events: none;
   opacity: 0;
 }
 
-.two-d5-root .section {
-  height: 100vh;
+.spine-block {
+  height: 90vh;
 }
 
-/* Responsiveness */
-@media (max-width: 900px) {
-  .book-wrapper {
-    width: 680px;
-    height: 420px;
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .poster-stage {
+    padding: 4.5rem 2rem 2.5rem 3rem;
   }
-  .book-chapter-title {
-    font-size: 1.75rem;
+  .poster-left-panel {
+    width: 50%;
   }
-  .page-content {
-    padding: 25px 20px;
-  }
-  .page-photo-wrap {
-    padding: 14px;
-  }
-  .p-img-reveal {
-    top: 14px;
-    left: 14px;
-    width: calc(100% - 28px);
-    height: calc(100% - 28px);
+  .lp-letter {
+    font-size: 3.2rem;
   }
 }
 
-@media (max-width: 600px) {
-  .book-wrapper {
-    width: 92vw;
-    height: 320px;
+@media (max-width: 768px) {
+  .poster-stage {
+    flex-direction: column;
+    padding: 4.2rem 1.4rem 2rem 1.4rem;
   }
-  .book-chapter-title {
-    font-size: 1.3rem;
+  .poster-left-panel {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    gap: 1rem;
   }
-  .page-content {
-    padding: 16px 12px;
+  .directors-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
   }
-  .folio-tag {
-    font-size: 0.65rem;
-    margin-bottom: 0.5rem;
+  .lp-letter {
+    font-size: 2.3rem;
   }
-  .page-photo-wrap {
-    padding: 8px;
+  .camera-icon-svg {
+    width: 34px;
+    height: 25px;
+    top: -19px;
   }
-  .p-img-reveal {
-    top: 8px;
-    left: 8px;
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
+  .reel-scroll-hint {
+    display: none;
   }
 }

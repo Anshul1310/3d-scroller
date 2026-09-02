@@ -5,6 +5,7 @@ import './2d2.css';
 import './2d3.css';
 import './2d4.css';
 import './2d5.css';
+import './2d6.css';
 
 class AppRouter {
   constructor() {
@@ -70,7 +71,8 @@ class AppRouter {
       { path: '/2d2', label: '2D2 Deck' },
       { path: '/2d3', label: '2D3 Vortex' },
       { path: '/2d4', label: '2D4 Frames' },
-      { path: '/2d5', label: '2D5 Book' }
+      { path: '/2d5', label: '2D5 Arc Reel' },
+      { path: '/2d6', label: '2D6 Circular' }
     ];
 
     const currentKey = (activeRoute === '/2d' || activeRoute === '/2d0') ? '/2d0' : activeRoute;
@@ -94,6 +96,7 @@ class AppRouter {
 
   getRoute() {
     const path = window.location.pathname.toLowerCase();
+    if (path.startsWith('/2d6')) return '/2d6';
     if (path.startsWith('/2d5')) return '/2d5';
     if (path.startsWith('/2d4')) return '/2d4';
     if (path.startsWith('/2d3')) return '/2d3';
@@ -124,12 +127,18 @@ class AppRouter {
     window.scrollTo(0, 0);
     this.currentRoute = route;
 
-    document.body.classList.remove('two-d-active', 'two-d1-active', 'two-d2-active', 'two-d3-active', 'two-d4-active', 'two-d5-active');
+    document.body.classList.remove('two-d-active', 'two-d1-active', 'two-d2-active', 'two-d3-active', 'two-d4-active', 'two-d5-active', 'two-d6-active');
     this.renderGlobalNav(route);
 
-    if (route === '/2d5') {
+    if (route === '/2d6') {
+      document.body.classList.add('two-d6-active');
+      document.title = "2D6 Circular Gallery — Transfinitte '26";
+      const { TwoD6Scroller } = await import('./twoD6Scroller.js');
+      this.currentInstance = new TwoD6Scroller(this.container);
+      this.currentInstance.mount();
+    } else if (route === '/2d5') {
       document.body.classList.add('two-d5-active');
-      document.title = "2D5 Book Folio — Transfinitte";
+      document.title = "2D5 Arc Reel — Disney Launchpad Experience";
       const { TwoD5Scroller } = await import('./twoD5Scroller.js');
       this.currentInstance = new TwoD5Scroller(this.container);
       this.currentInstance.mount();
